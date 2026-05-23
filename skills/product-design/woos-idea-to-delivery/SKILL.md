@@ -142,9 +142,9 @@ If unsure, start with Standard. User can override with `GREENLIGHT NEXT STAGE` t
 
 - Research existing landscape
 - Competitive analysis
-- Product roadmap with versioned delivery
-- System architecture overview (high-level, product-perspective)
-- Output: `docs/product/<project>-roadmap.md`
+- Product roadmap with versioned delivery → **Roadmap Review Gate** (independent sub-agent)
+- System architecture overview → **Architecture Review Gate** (independent sub-agent)
+- Output: `docs/product/<project>-roadmap.md` + `docs/product/<project>-architecture.md`
 
 **Lite: skip.**
 
@@ -153,9 +153,8 @@ If unsure, start with Standard. User can override with `GREENLIGHT NEXT STAGE` t
 **Skill:** `woos-product-design-flow`
 
 - Select version scope from roadmap
-- Write requirements + PRD
-- PRD review (self-check or independent)
-- UI Design Brief (optional, via `woos-ui-design-brief`)
+- Write requirements + PRD → **PRD Review Gate** (independent sub-agent)
+- UI Design Brief (optional) → **UI Brief Review Gate** (independent sub-agent)
 - Analyze gate (product consistency)
 - Package into handoff
 

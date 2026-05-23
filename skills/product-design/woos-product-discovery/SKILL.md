@@ -129,6 +129,26 @@ Synthesize everything into a single roadmap document:
 
 **Output:** `docs/product/<project-slug>-roadmap.md`
 
+### Step 4R: Roadmap Review Gate
+
+**Reviewer:** Independent sub-agent dispatched in fresh context (product-strategist persona).
+
+Review criteria:
+- Vision is clear and differentiated (not generic)
+- Versioning is logical (V1 is truly minimal, each version builds on prior)
+- Success metrics are measurable and specific
+- Non-goals actually prevent scope creep
+- Decision Log rationale is sound (not circular)
+- Personas are grounded in real user behavior, not assumptions
+
+**Dispatch:** `delegate_task` → fresh context, product-strategist role, read only roadmap + idea-capture.
+
+**Results:**
+- **PASS** → proceed to Step 5
+- **REQUEST_CHANGES** → return to Step 4 with specific feedback
+
+Max 2 rounds. If no convergence → ask user for direction.
+
 ### Step 5: System Architecture Overview
 
 After the roadmap is defined, produce a high-level system architecture that spans all planned versions. This prevents per-feature designs from conflicting later.
@@ -179,6 +199,27 @@ System-level risks that affect multiple features.
 |---|----------|-----------|-------------|
 | A1 | ... | ... | ... |
 ```
+
+### Step 5R: Architecture Review Gate
+
+**Reviewer:** Independent sub-agent dispatched in fresh context (system-architect persona).
+
+Review criteria:
+- Components are coherent and have clear boundaries
+- Communication patterns are consistent (not mixing styles arbitrarily)
+- Data architecture avoids unnecessary coupling between features
+- Shared infrastructure is justified (not over-engineered for V1)
+- Cross-feature dependencies are identified and manageable
+- Technical risks are realistic (not alarmist or dismissive)
+- Architecture supports the roadmap's versioned delivery (V1 can ship without V2's components)
+
+**Dispatch:** `delegate_task` → fresh context, system-architect role, read roadmap + architecture.
+
+**Results:**
+- **PASS** → proceed to Step 6
+- **REQUEST_CHANGES** → return to Step 5 with specific feedback
+
+Max 2 rounds. If no convergence → ask user for direction.
 
 ### Step 6: Decision Log Initialization
 

@@ -107,15 +107,21 @@ Write full PRD:
 
 **[PM Mode → Checkpoint]**
 
-Self-review or pair-review against:
-- Do all requirements trace back to user value?
-- Are acceptance criteria testable without implementation details?
-- Are non-goals clearly stated?
-- Are edge cases covered?
+**Reviewer:** Independent sub-agent dispatched in fresh context (product-planner persona).
+
+Review criteria:
+- All requirements trace back to user value (no "nice to have" disguised as must-have)
+- Acceptance criteria are testable without knowing implementation details
+- Non-goals clearly prevent scope creep
+- Edge cases are covered (not hand-waved)
+- User stories represent real user behavior, not developer convenience
+- No contradictions between requirements
+
+**Dispatch:** `delegate_task` → fresh context, product-planner role, read PRD + requirements + roadmap.
 
 **Results:**
 - **PASS** → proceed to Step 5
-- **REQUEST_CHANGES** → return to Step 3 with feedback
+- **REQUEST_CHANGES** → return to Step 3 with specific feedback
 - 3 rounds without convergence → ask user for direction
 
 **Checkpoint:** If configured, pause here and present PRD summary to user for confirmation.
@@ -138,6 +144,27 @@ When the feature has user-facing interface:
 - Pure API/backend/CLI work
 - Lite mode
 - User explicitly declines
+
+### Step 5R: UI Brief Review Gate (when Step 5 runs)
+
+**Reviewer:** Independent sub-agent dispatched in fresh context (ux-reviewer persona).
+
+Review criteria:
+- Every screen maps to at least one user story from the PRD
+- All important states are defined (empty, loading, error, success, first-run)
+- User flows have clear entry/exit points matching PRD flows
+- Visual direction is consistent (not contradictory principles)
+- Accessibility considerations are realistic for the target platform
+- Component inventory covers the screens described (no orphan components)
+- Design principles actually guide decisions (not generic platitudes)
+
+**Dispatch:** `delegate_task` → fresh context, ux-reviewer role, read UI brief + PRD.
+
+**Results:**
+- **PASS** → proceed to Step 6
+- **REQUEST_CHANGES** → return to Step 5 with specific feedback
+
+Max 2 rounds. If no convergence → ask user for direction.
 
 ### Step 6: Analyze Gate
 

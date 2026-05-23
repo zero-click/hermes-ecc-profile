@@ -108,9 +108,25 @@ No review gates. Self-check only.
 
 ⭐ **`docs/handoff/<version>/<feature>.md`** — coding agent 的唯一输入
 
-Additional outputs (Strict only):
-- `docs/reviews/<version>/integration-report.md` — 跨 feature 一致性报告
-- `docs/design/<version>/<feature>-ui-brief.md` — UI 方向
+Handoff 文件中包含 `mode` 字段标识产品设计用了哪个模式：
+
+```yaml
+---
+spec-version: 1
+mode: standard  # lite | standard | strict
+feature: auth
+version: v1
+based-on: docs/prd/v1/auth.md
+---
+```
+
+**Per-mode deliverables:**
+
+| Mode | 产出物 |
+|------|--------|
+| Lite | `docs/handoff/<version>/<feature>.md` (4 fields: mission, tasks, AC, verification) |
+| Standard | `docs/prd/<version>/<feature>-requirements.md`<br>`docs/prd/<version>/<feature>.md`<br>`docs/reviews/<version>/<feature>-prd-review-rN.md`<br>⭐ `docs/handoff/<version>/<feature>.md` |
+| Strict | Standard 全部 +<br>`docs/design/<version>/<feature>-ui-brief.md` (如有)<br>`docs/reviews/<version>/<feature>-ui-review-rN.md` (如有)<br>`docs/handoff/<version>/<feature>-analyze-report.md`<br>`docs/reviews/<version>/integration-report.md` |
 
 ---
 

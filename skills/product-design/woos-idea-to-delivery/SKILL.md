@@ -165,6 +165,8 @@ If unsure, start with Standard. User can override with `GREENLIGHT NEXT STAGE` t
 
 **Lite: abbreviated** — only Mission + Tasks + AC + Verification.
 
+**⚠️ Enforcement:** `woos-product-design-flow` has strict Enforcement Rules (E1–E6). Every step MUST produce its declared output file and pass structural validation before proceeding. No step merging, no skipping on failure, no partial reviews. See the skill for details.
+
 ---
 
 ### Engineering Side (Coding Agent)

@@ -230,7 +230,7 @@ P0 requirements get full detail, P2 gets brief mention:
 | **Sub-agent** | ✅ (independent reviewer) |
 | **Persona** | `references/bmad/personas/prd-validator.toml` |
 | **Knowledge** | `references/bmad/frameworks/validate-prd.md` + `references/bmad/templates/prd-validation-checklist.md` |
-| **Input** | `docs/prd/<version>/<feature>.md` + `docs/prd/<version>/<feature>-requirements.md` |
+| **Input** | `docs/prd/<version>/<feature>.md` + `docs/prd/<version>/<feature>-requirements.md` + `docs/product/<project>-architecture.md` |
 | **Output** | `docs/reviews/<version>/<feature>-prd-review-rN.md` |
 
 **⚠️ PRD Review has TWO phases (both mandatory):**
@@ -258,7 +258,8 @@ If ANY section is missing → **immediate REQUEST_CHANGES** without proceeding t
 | P3 | Non-goals effective | Make specific enough to reject a concrete feature request |
 | P4 | Edge cases covered | Add "What if…" for: empty state, error, timeout, concurrent access |
 | P5 | Real user behavior | Replace developer-centric language with user-observable actions |
-| P6 | No contradictions | Identify conflicts; pick one, move the other to non-goals |
+| P6 | No internal contradictions | Identify conflicts within this PRD; resolve or move to non-goals |
+| P7 | Architecture alignment | Cross-check constants, state definitions, and API routes against `docs/product/<project>-architecture.md`. Flag any divergence. |
 
 **Review findings format:**
 ```markdown
@@ -424,32 +425,115 @@ Checklist:
 
 ---
 
-### Step 10: Version Integration Gate
+### Step 10: Version Integration Gate (Cross-Feature Audit)
 
 | | |
 |---|---|
 | **Sub-agent** | ✅ |
 | **Persona** | `references/bmad/personas/pm.toml` |
 | **Knowledge** | `references/bmad/frameworks/implementation-readiness.md` |
-| **Input** | All `docs/handoff/<version>/<feature>.md` for this version |
+| **Input** | **ALL documents for this version** (see Input Scope below) |
 | **Output** | `docs/reviews/<version>/integration-report.md` |
 
 **Trigger:** Runs once after ALL features in this version pass Step 9.
 **Skip when:** Version has only 1 feature.
 
-**Checklist:**
+#### Input Scope (MUST read all of these)
 
-| # | Criterion | Fix Hint |
-|---|-----------|----------|
-| I1 | No AC conflicts | Identify conflicting AC between features; resolve or make one non-goal |
-| I2 | Shared components consistent | If features reference same component, verify specs don't contradict |
-| I3 | User flows connectable | Cross-feature flows (e.g., auth → dashboard) have matching entry/exit |
-| I4 | No duplicate effort | If two features define similar functionality, merge or explicitly split |
-| I5 | Dependency order clear | If feature B depends on feature A, note build order in report |
+The reviewer MUST read the full content of every document below — not just handoffs:
+
+```
+docs/product/<project>-roadmap.md
+docs/product/<project>-architecture.md
+docs/prd/<version>/<feature>-requirements.md   (× all features)
+docs/prd/<version>/<feature>.md                (× all features)
+docs/handoff/<version>/<feature>.md            (× all features)
+docs/design/<version>/<feature>-ui-brief.md    (× all features, if exists)
+```
+
+#### Audit Checklist
+
+**Part A — Shared Concept Consistency:**
+
+| # | Check | Method | Example Failure |
+|---|-------|--------|-----------------|
+| A1 | State machine unified | Extract all state definitions across features. Every feature that references the same entity MUST use identical states + transitions | Feature B: 7 states vs Feature D: 6 states |
+| A2 | Constants consistent | Extract all numeric constants (timeouts, limits, intervals). Same concept MUST have same value everywhere | Heartbeat: 30s in architecture vs 90s in requirements |
+| A3 | Data model aligned | Extract all entity schemas/types. Same entity MUST have identical fields across features | Task type has `accepted` in C but not in D |
+| A4 | API contract consistent | Extract all endpoint definitions. Same endpoint MUST have consistent request/response schemas, status codes, auth | `POST /start` requires `accepted` state in B but `assigned` in D |
+| A5 | Terminology unified | Same concept MUST use same name everywhere | "agent" vs "worker" vs "executor" referring to same entity |
+
+**Part B — Completeness & Traceability:**
+
+| # | Check | Method |
+|---|-------|--------|
+| B1 | Roadmap → Requirements coverage | Every roadmap feature has a requirements file |
+| B2 | Requirements → PRD coverage | Every requirement appears in a PRD |
+| B3 | PRD → Handoff coverage | Every PRD user story appears in handoff build tasks |
+| B4 | Architecture → PRD alignment | Architecture's component list matches PRD's scope |
+| B5 | UI → PRD traceability | Every UI screen/action maps to a PRD user story |
+
+**Part C — Cross-Feature Integration:**
+
+| # | Check | Method |
+|---|-------|--------|
+| C1 | No AC conflicts | Identify conflicting acceptance criteria between features |
+| C2 | User flows connectable | Cross-feature flows have matching entry/exit states |
+| C3 | No duplicate effort | Similar functionality across features is merged or explicitly split |
+| C4 | Dependency order clear | Build order documented for dependent features |
+| C5 | Error handling consistent | Same error scenarios handled the same way across features |
+
+#### Output Format
+
+```markdown
+# Version Integration Audit — <version>
+
+## Summary
+- Features audited: [list]
+- Documents read: [count]
+- Result: PASS / CONFLICTS_FOUND
+
+## Part A — Shared Concepts
+
+### State Machine
+[extract all state definitions, mark ✅ consistent or ❌ contradicts]
+
+### Constants
+| Constant | Doc 1 Value | Doc 2 Value | Status |
+|----------|-------------|-------------|--------|
+| heartbeat_timeout | 30s (architecture) | 90s (B-requirements) | ❌ |
+
+### Data Model
+[compare entity fields across features]
+
+### API Contracts
+[compare endpoint definitions]
+
+## Part B — Traceability
+[coverage matrix: roadmap → requirements → PRD → handoff]
+
+## Part C — Cross-Feature
+[C1-C5 findings]
+
+## Verdict
+- **PASS**: No contradictions found
+- **CONFLICTS_FOUND**: [list each conflict with fix recommendation]
+
+## Recommended Fix Order
+1. [highest priority fix — e.g., unify state machine]
+2. ...
+```
+
+#### Review Rules
+
+- Reviewer MUST produce a finding for EVERY check (A1-A5, B1-B5, C1-C5) — no skipping
+- ANY ❌ in Part A = **CONFLICTS_FOUND** (shared concepts MUST be unified before build)
+- Part B gaps = **CONFLICTS_FOUND** (traceability must be complete)
+- Part C issues = **CONFLICTS_FOUND** unless explicitly documented as intentional divergence
 
 **Results:**
 - **PASS** → all handoffs ready for engineering
-- **CONFLICTS** → return to conflicting feature's Step 4 (PRD) to resolve, then re-run Steps 5–9 for that feature
+- **CONFLICTS_FOUND** → return to conflicting feature's Step 4 (PRD) to resolve, then re-run Steps 5–9 for that feature. If conflict is in architecture/roadmap, fix upstream first.
 
 ---
 

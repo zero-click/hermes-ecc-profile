@@ -13,6 +13,10 @@ metadata:
 
 # Product Design Flow (Orchestrator)
 
+> **🚨 CRITICAL: Read "Enforcement Rules" section before executing ANY step.**
+> Every step MUST produce its declared output file. Every output MUST pass structural validation.
+> Skipping steps, merging outputs, or passing reviews without checking all criteria = WORKFLOW VIOLATION.
+
 ## Purpose
 
 Transform one version from the product roadmap into a build-ready product handoff. This is **Stage 2** of the woos-idea-to-delivery flow. Run once per version.
@@ -24,8 +28,75 @@ Focus: define WHAT to build and WHY. Technical architecture (HOW) is engineering
 This file defines an **orchestrator** — a thin state machine that:
 1. Tracks which step we're on (via `run-manifest.yaml`)
 2. Dispatches sub-agents with the right persona + knowledge
-3. Collects outputs, decides next step
-4. Handles review fix loops
+3. **Validates outputs before advancing** (structural check)
+4. Collects outputs, decides next step
+5. Handles review fix loops
+
+---
+
+## ⛔ Enforcement Rules (NON-NEGOTIABLE)
+
+These rules prevent the orchestrator from cutting corners. Violating any of them makes the entire flow invalid.
+
+### E1: No Step Merging
+
+Each step produces its own output file. You MUST NOT combine steps (e.g., writing requirements + PRD in one pass). Each step is a separate sub-agent dispatch with a separate output.
+
+**Why:** Merging steps skips the quality ratchet. Each step builds on the previous step's validated output.
+
+### E2: Output Validation Gate
+
+After EVERY step, before advancing to the next, the orchestrator MUST verify:
+
+```
+1. Output file EXISTS at the declared path
+2. Output file contains ALL required sections (structural check below)
+3. If validation fails → re-dispatch the step, do NOT proceed
+```
+
+### E3: Template Compliance Check
+
+Steps that declare a `Template` field MUST produce output matching that template's section structure. Check by verifying these H2 headings exist:
+
+| Step | Required H2 Sections |
+|------|---------------------|
+| Step 2 (Requirements) | `## Problem Statement`, `## Goals`, `## User Stories`, `## Non-Goals`, `## Constraints`, `## Risks & Unknowns` |
+| Step 4 (PRD) | `## Background`, `## User Personas`, `## Functional Requirements`, `## Non-Functional Requirements`, `## User Flows`, `## Edge Cases`, `## Non-Goals`, `## Success Metrics` |
+| Step 9 (Readiness) | `## Checklist`, `## Verdict` |
+
+If ANY required section is missing → the step is NOT done. Re-dispatch with: "Missing sections: [list]. Add them."
+
+### E4: Review Prompt Must Include Full Checklist
+
+When dispatching a review sub-agent, the orchestrator MUST include the COMPLETE checklist table in the prompt. Do NOT summarize or abbreviate it. The reviewer must check ALL criteria, not just "look for issues."
+
+**Review dispatch template:**
+```
+You are reviewing: [file path]
+Check EVERY row in this checklist. For EACH row, state ✅ or ❌ with a specific finding.
+Do NOT skip rows. Do NOT give blanket passes.
+
+[paste full checklist table here]
+
+If you find ❌ on any row, the result is REQUEST_CHANGES.
+```
+
+### E5: No Silent Step Skipping
+
+If a step fails (file not found, sub-agent error, etc.):
+- **FIX the problem** (correct file path, re-dispatch, etc.)
+- Do NOT skip to next step
+- Do NOT mark as "skipped" unless the step is explicitly optional AND user confirms skip
+
+The only legitimately skippable steps are:
+- Step 6 (UI Brief) — only if user confirms "no UI"
+- Step 10 (Integration) — only if single feature
+
+### E6: Review Cannot Self-Validate
+
+The same agent that authored a document MUST NOT review it. Reviews always use a fresh sub-agent dispatch with independent context.
+
+---
 
 ## Project Root Requirement
 
@@ -99,6 +170,8 @@ Produce structured requirements following the template. Mark uncertain items wit
 - Non-goals
 - Risk assumptions and unknowns
 
+**⚠️ This step MUST produce a separate file.** Do NOT fold requirements into the PRD. The requirements file is the input to Step 3 (Priority Ranking) which appends to it.
+
 ---
 
 ### Step 3: Priority Ranking
@@ -145,6 +218,8 @@ P0 requirements get full detail, P2 gets brief mention:
 - Edge cases and error handling
 - User flows (text-based)
 
+**⚠️ Template is mandatory, not advisory.** After authoring, the orchestrator runs E3 structural check. If ANY template section is missing, this step is re-dispatched until all sections are present.
+
 ---
 
 ### Step 5: PRD Review Gate
@@ -157,7 +232,23 @@ P0 requirements get full detail, P2 gets brief mention:
 | **Input** | `docs/prd/<version>/<feature>.md` + `docs/prd/<version>/<feature>-requirements.md` |
 | **Output** | `docs/reviews/<version>/<feature>-prd-review-rN.md` |
 
-**Checklist:**
+**⚠️ PRD Review has TWO phases (both mandatory):**
+
+**Phase A — Structural Completeness (E3 enforcement):**
+
+Before content review, verify ALL required sections exist per template:
+- `## Background` ✅/❌
+- `## User Personas` ✅/❌
+- `## Functional Requirements` (with `**User value:**` per FR) ✅/❌
+- `## Non-Functional Requirements` ✅/❌
+- `## User Flows` (at least 1 flow diagram) ✅/❌
+- `## Edge Cases` (table format, ≥ 4 cases) ✅/❌
+- `## Non-Goals` ✅/❌
+- `## Success Metrics` (≥ 2 measurable metrics) ✅/❌
+
+If ANY section is missing → **immediate REQUEST_CHANGES** without proceeding to Phase B.
+
+**Phase B — Content Quality Checklist:**
 
 | # | Criterion | Fix Hint |
 |---|-----------|----------|
@@ -375,10 +466,16 @@ Requirements → PRD → PRD Review → Handoff → Readiness
 | S2 | PRD Authoring | ✅ (pm) | `docs/prd/<version>/<feature>.md` |
 | S3 | PRD Review | ✅ (prd-validator) | `docs/reviews/<version>/<feature>-prd-review-rN.md` |
 | S4 | Build Handoff | ✅ (pm) | `docs/handoff/<version>/<feature>.md` |
-| S5 | Readiness Check | ❌ orchestrator | _(pass/fail)_ |
+| S5 | Readiness Check | ❌ orchestrator | `docs/reviews/<version>/<feature>-readiness.md` |
 
 **No:** Priority Ranking, UI Brief, UI Review, Analyze Gate, Integration Gate.
 **Fix flow:** Same as Strict — max 2 review rounds on S3.
+
+**⚠️ Standard mode enforcement:**
+- S1 MUST produce a separate requirements file (not folded into PRD)
+- S2 MUST follow `templates/prd-template.md` — E3 structural check applies
+- S3 MUST run Phase A (structural) + Phase B (content) review. No "Conditional Pass."
+- S5 MUST produce a readiness output file (not just a mental check)
 
 ---
 
@@ -483,8 +580,19 @@ On completion:
 | Roadmap missing | Redirect to `woos-product-discovery` first |
 | Review loops 3x | Ask user for direction |
 | Scope too large | Split into multiple handoffs per sub-feature |
-| UI brief but no interface | Skip Step 6, note in handoff |
+| UI brief but no interface | Skip Step 6 **only with explicit user confirmation**, note in handoff |
 | Crash mid-step | Recovery protocol from run-manifest |
+| Sub-agent file not found | Fix path (use absolute), re-dispatch. **NEVER skip.** |
+| Output validation fails (E3) | Re-dispatch step with "Missing sections: ..." instruction |
+| Step produces empty/stub file | Re-dispatch. Stub output = step not done |
+
+### ❌ Explicitly Forbidden Actions
+
+- **Do NOT merge steps** — each step = 1 sub-agent dispatch → 1 verified output
+- **Do NOT skip a step because it "failed"** — fix the failure and retry
+- **Do NOT pass a review without checking every row** — partial review = review not done
+- **Do NOT accept "Conditional Pass"** — only PASS or REQUEST_CHANGES exist
+- **Do NOT write PRD without the template** — free-form PRD = not a PRD
 
 ## Skills Used
 
@@ -492,3 +600,19 @@ On completion:
 |-------|------|
 | `woos-ui-design-brief` | 6 |
 | `woos-build-handoff` | 8 |
+
+---
+
+## Known Anti-Patterns (from real failures)
+
+These are things agents ACTUALLY DO when executing this workflow. Catch yourself:
+
+| Anti-Pattern | Why It's Wrong | Correct Behavior |
+|---|---|---|
+| Merging Step 2+3 into PRD | Requirements file never exists; priority ranking never done independently | Each step = separate dispatch, separate output file |
+| Writing PRD "free-form" | Template sections missing → review can't validate completeness | Copy template, fill each section. Empty section = `[NEEDS CLARIFICATION: reason]` |
+| Giving reviewer a vague prompt | "Check for issues" → reviewer only finds 2-3 surface problems | Paste FULL checklist. Require verdict on EVERY row |
+| Accepting "Conditional Pass" | Means "partially broken but too lazy to fix" | Only PASS or REQUEST_CHANGES. Conditional = REQUEST_CHANGES |
+| Skipping step after file-not-found | The step's output doesn't exist → downstream steps fail silently | Fix path, retry. Never skip |
+| Readiness as mental check | No output file → no audit trail, no proof of validation | Write `docs/reviews/<version>/<feature>-readiness.md` |
+| Sub-agent reviewing own work | Confirmation bias — author can't see own gaps | Fresh sub-agent with no prior context of authoring |

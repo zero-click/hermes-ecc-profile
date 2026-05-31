@@ -224,8 +224,22 @@ This requirement also applies when Discovery is skipped because roadmap and arch
 - Mode is stated, not asked — it's determined by roadmap content
 - If user disagrees with mode inference, respect their override
 - Do NOT proceed until user explicitly says "start PRD" or equivalent
-- If user has questions or wants changes → return to the relevant discovery step → re-present full files → wait again
+- If user has questions or wants changes → apply changes → re-run review gates (see below) → re-present full files → wait again
 - This gate is always mandatory
+
+**Post-Feedback Review (mandatory when changes are made):**
+
+When the user provides feedback and the agent modifies roadmap or architecture:
+
+1. Apply the user's requested changes
+2. Re-run the relevant review gate(s):
+   - Roadmap changed → re-run `woos-roadmap-review-gate` (Step 3R)
+   - Architecture changed → re-run `woos-architecture-review-gate` (Step 4R)
+   - Both changed → re-run both gates
+3. If review returns `REQUEST_CHANGES` → fix → re-run gate (same loop as original)
+4. Only after gate(s) PASS → re-present full files to user → wait for approval again
+
+This prevents the agent from introducing errors or omissions during the fix that go unreviewed.
 
 Wait for user approval, then continue to Phase 3.
 

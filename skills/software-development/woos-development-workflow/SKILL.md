@@ -34,7 +34,7 @@ Example: 01-user-auth, 02-project-dashboard
 - Roadmap: `docs/product/<project>-roadmap.md`
 - Architecture: `docs/product/<project>-architecture.md`
 
-**Additional Strict-mode inputs when available:**
+**Additional product design inputs when available:**
 
 - Interface summary: `docs/prd/<version>/<feature-id>-interface.md`
 - UI brief: `docs/design/<version>/<feature-id>-ui-brief.md`
@@ -60,8 +60,7 @@ Mandatory bootstrap:
 ## Execution Profiles
 
 Default profile is **Standard**.  
-Use **Lite** for low-risk small changes.  
-Use **Strict** for high-risk, ambiguous, or security-critical scope.
+Use **Lite** only for low-risk small changes that do not need story decomposition or independent design review.
 
 ### Lite (small/low-risk)
 
@@ -71,21 +70,15 @@ Run Orchestrator → Git → Product Intake → Implement → Verify → Code Re
 
 Criteria: limited scope, low coupling, no architecture/API changes, no security impact.
 
-### Standard (default)
+### Standard (default full-gate flow)
 
 ```text
 Run Orchestrator → Git → Product Intake → Feature Design → Design Review → Story Decomposition → Story Loop (TDD+Implement+Verify) → Executable Acceptance → Deviation Control → Traceability → Code Review → PR Readiness → Workflow Memory
 ```
 
-Use when: multi-file change, design choices needed, moderate risk.
+Use when: default for product-designed features, multi-file change, design choices needed, moderate/high risk, security-sensitive scope, significant architecture/API/UI/database changes, or full traceability required.
 
-### Strict (full hard-gate)
-
-```text
-Standard + [API Design Review] + [Browser QA] + Architecture Conformance within Code Review
-```
-
-Use when: security-sensitive, high uncertainty, significant architecture changes, full traceability required.
+Standard includes conditional hard gates such as API design review, browser QA, database migration review, deployment patterns, security review, production audit, and architecture conformance when their triggers apply.
 
 ## Skill Whitelist
 
@@ -188,8 +181,8 @@ Conditional skills activate based on these concrete triggers (not agent judgment
 | `browser-qa` | PRD or UI brief describes UI behavior, OR stories produce `.tsx`/`.vue`/`.svelte`/HTML files |
 | `e2e-testing` | Stories produce integration test files, OR PRD AC reference user flows spanning multiple pages |
 | `database-migrations` | Design doc defines schema changes, OR stories create/modify migration files |
-| `deployment-patterns` | Design doc has rollout/rollback section, OR Strict mode is active |
-| `production-audit` | Strict mode is active, OR PRD flags security/compliance-sensitive scope |
+| `deployment-patterns` | Design doc has rollout/rollback section, deployment/infra changes, or migration rollout risk |
+| `production-audit` | PRD flags security/compliance-sensitive scope, high-risk rollout, or production reliability risk |
 | `security-review` | Any story touches auth, input validation, secrets, API endpoints, or payment flows |
 | `codebase-onboarding` | First run on this repository (no prior run-manifest exists) |
 
@@ -207,7 +200,7 @@ Conditional skills activate based on these concrete triggers (not agent judgment
 - Roadmap: `docs/product/<project>-roadmap.md`
 - Architecture: `docs/product/<project>-architecture.md`
 
-**Additional Strict-mode input when available:**
+**Additional product design input when available:**
 
 - Interface summary: `docs/prd/<version>/<feature-id>-interface.md`
 - UI brief: `docs/design/<version>/<feature-id>-ui-brief.md`
@@ -231,7 +224,7 @@ Conditional skills activate based on these concrete triggers (not agent judgment
 
 1. Design artifact at `docs/engineering/<version>/<feature-id>-design.md`.
 2. Covers: architecture, data model, interfaces, risk, rollout/rollback.
-3. If API endpoints defined and Strict mode: invoke `api-design` for review.
+3. If API endpoints are defined or changed: invoke `api-design` for review.
 4. If database schema changes: reference `database-migrations` for migration strategy.
 5. If deployment strategy needed: reference `deployment-patterns` for rollout/rollback.
 6. Baseline/deviation fields complete; deviations captured via `architecture-decision-records`.
@@ -385,7 +378,7 @@ Trace from original PRD through design to implementation and tests.
    - Always: `coding-standards` knowledge
    - If security-sensitive (per E3 triggers): full `security-review` skill content
 3. If security-sensitive: dispatch `security-reviewer` with `security-review` knowledge.
-4. If Strict mode: verify architecture conformance (component boundaries, data model, API contracts).
+4. Verify architecture conformance (component boundaries, data model, API contracts).
 5. If applicable (per E3 triggers): invoke `production-audit` for pre-merge readiness.
 6. Output MUST follow structured findings format (per E2). "LGTM" without findings table = INVALID, rerun.
 7. Uses `woos-review-context` for cumulative findings.
@@ -538,8 +531,8 @@ Persistence:
 │   ├── product/<project>-roadmap.md      ← required input
 │   ├── product/<project>-architecture.md ← required input
 │   ├── prd/<version>/<feature-id>.md     ← required input
-│   ├── prd/<version>/<feature-id>-interface.md ← Strict input
-│   ├── design/<version>/<feature-id>-ui-brief.md ← Strict input if UI
+│   ├── prd/<version>/<feature-id>-interface.md ← optional product input
+│   ├── design/<version>/<feature-id>-ui-brief.md ← optional product input if UI
 │   ├── engineering/<version>/<feature-id>-design.md ← output of Gate 1
 │   ├── stories/<version>/<feature-id>/   ← output of Gate 2
 │   │   ├── story-001.md

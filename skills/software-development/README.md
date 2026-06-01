@@ -16,7 +16,7 @@ This is **Stage 3** of the idea-to-delivery pipeline. It ensures:
 
 1. Ensure required product inputs exist: PRD, roadmap, and architecture
 2. The agent activates `woos-development-workflow` (entry point skill)
-3. The workflow auto-selects Lite/Standard/Strict based on PRD scope and risk
+3. The workflow auto-selects Lite or Standard based on PRD scope and risk
 4. Follow the gated flow — each gate must PASS before the next begins
 
 **Prerequisite:** Product design pipeline must have completed the feature checkpoint. Missing PRD, roadmap, or architecture = BLOCKED.
@@ -217,7 +217,7 @@ Per story (in dependency order):
 
 - **Skill:** `woos-code-review-gate`
 - Dispatches `code-reviewer` (+ `security-reviewer` with `security-review` knowledge if sensitive)
-- If Strict: also checks architecture conformance
+- Checks architecture conformance in Standard mode
 - If applicable: invokes `production-audit` for pre-merge readiness
 - Uses `woos-agent-decision` for reviewer conflicts
 - 3 rounds without convergence → `woos-human-handoff`
@@ -246,13 +246,11 @@ Per story (in dependency order):
 | Mode | When | Gates | Story Loop |
 |------|------|-------|------------|
 | **Lite** | Low-risk, limited scope, no arch changes | Product Intake → Implement → Verify → Review → PR | No decomposition |
-| **Standard** | Multi-file, moderate risk (default) | All 9 gates | Full story loop |
-| **Strict** | Security-sensitive, high uncertainty | All + API Review + Browser QA + Arch Conformance | Full story loop |
+| **Standard** | Default for product-designed features, multi-file changes, UI/API/database/security risk, or full traceability | All 9 gates + conditional API/browser/security/production audits | Full story loop |
 
 **Mode is determined by PRD scope and risk**, not chosen manually:
 - Small, low-risk PRD → Lite mode
-- Multi-file or moderate-risk PRD → Standard mode
-- Security/compliance-sensitive or high-uncertainty PRD → Strict mode
+- Everything else → Standard mode
 
 ## Enforcement Rules
 
@@ -324,7 +322,7 @@ This workflow draws its engineering methodology from [ECC](https://github.com/an
 
 #### Core Methodology (always active)
 
-Skills that define HOW engineering work is done, active in every Standard/Strict run:
+Skills that define HOW engineering work is done, active in every Standard run:
 
 | Skill | Knowledge Provided | Gate |
 |-------|-------------------|------|
@@ -408,8 +406,8 @@ When engineering discovers a design issue that can't be resolved within scope:
 │   ├── product/<project>-roadmap.md   ← required input
 │   ├── product/<project>-architecture.md ← required input
 │   ├── prd/<version>/<feature-id>.md  ← required input
-│   ├── prd/<version>/<feature-id>-interface.md ← Strict input
-│   ├── design/<version>/<feature-id>-ui-brief.md ← Strict input if UI
+│   ├── prd/<version>/<feature-id>-interface.md ← optional product input
+│   ├── design/<version>/<feature-id>-ui-brief.md ← optional product input if UI
 │   ├── engineering/<version>/<feature-id>-design.md ← Gate 1 output
 │   ├── stories/<version>/<feature-id>/ ← Gate 2 output
 │   │   ├── story-001.md

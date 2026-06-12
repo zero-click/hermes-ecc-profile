@@ -108,7 +108,7 @@ Engineering issues a Design Change Request at `docs/feedback/<version>/<feature-
 
 The product flow is built on the [BMAD](https://github.com/bmad-agent/bmad-agent) methodology, surfaced through:
 
-- **Personas** injected into sub-agent steps (PM "John", UX Designer "Sally", PRD Validator)
+- **Personas** injected into specific review steps (UX Designer "Sally" for UI brief review, PRD Validator for PRD and roadmap review)
 - **Frameworks** for PRD shaping, UX validation, market research, architecture coherence
 - **Templates** with `[NEEDS CLARIFICATION: …]` markers that block weak specs from passing
 

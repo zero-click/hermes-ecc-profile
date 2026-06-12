@@ -108,7 +108,7 @@ Lite 和 Standard 只跑子集——逐模式步骤清单见 [`woos-product-desi
 
 产品流基于 [BMAD](https://github.com/bmad-agent/bmad-agent) 方法论，通过以下方式投递给子 agent：
 
-- **Personas**：注入到子 agent 步骤（PM "John"、UX Designer "Sally"、PRD Validator）
+- **Personas**：注入到特定评审步骤（UX Designer "Sally" 用于 UI brief 评审，PRD Validator 用于 PRD 和 roadmap 评审）
 - **Frameworks**：PRD 形态、UX 校验、市场调研、架构一致性
 - **Templates**：带 `[NEEDS CLARIFICATION: …]` 标记，阻止弱规格过 gate
 

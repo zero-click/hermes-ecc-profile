@@ -106,7 +106,7 @@ Only these skills are allowed in this workflow:
 | Code/Security Review | `woos-code-review-gate` | local |
 | Security Review | `security-review` | imported |
 | Deployment Patterns | `deployment-patterns` | imported (conditional) |
-| Production Audit | `woos-ecc-production-audit` | local (conditional) |
+| Production Audit | `woos-production-audit` | local (conditional) |
 | PR Readiness | `woos-pr-readiness` | local |
 | Workflow Memory | `woos-workflow-memory` | local |
 | Review Context (cross-gate) | `woos-review-context` | local |
@@ -139,7 +139,7 @@ Before dispatching ANY review sub-agent (Gate 1R, Gate 7), the orchestrator MUST
 3. The sub-agent must receive domain knowledge, not just a role name
 
 **Gate 1R dispatch must include:** full content of `woos-design-review-gate` + `architecture-decision-records`
-**Gate 7 dispatch must include:** full content of `security-review` (+ `woos-ecc-production-audit` if applicable)
+**Gate 7 dispatch must include:** full content of `security-review` (+ `woos-production-audit` if applicable)
 
 Skipping this = sub-agent works without methodology = shallow "LGTM" output.
 
@@ -182,7 +182,7 @@ Conditional skills activate based on these concrete triggers (not agent judgment
 | `e2e-testing` | Stories produce integration test files, OR PRD AC reference user flows spanning multiple pages |
 | `database-migrations` | Design doc defines schema changes, OR stories create/modify migration files |
 | `deployment-patterns` | Design doc has rollout/rollback section, deployment/infra changes, or migration rollout risk |
-| `woos-ecc-production-audit` | PRD flags security/compliance-sensitive scope, high-risk rollout, or production reliability risk |
+| `woos-production-audit` | PRD flags security/compliance-sensitive scope, high-risk rollout, or production reliability risk |
 | `security-review` | Any story touches auth, input validation, secrets, API endpoints, or payment flows |
 | `codebase-onboarding` | First run on this repository (no prior run-manifest exists) |
 
@@ -370,7 +370,7 @@ Trace from original PRD through design to implementation and tests.
    - If security-sensitive (per E3 triggers): full `security-review` skill content
 3. If security-sensitive: dispatch `woos-security-reviewer` with `security-review` knowledge.
 4. If the woos-code-reviewer flags an architecture-level concern (component boundary, data model, or API contract change beyond the approved design), dispatch `woos-architect` with `mode: consult` to confirm interpretation before final verdict. Independent architecture conformance is owned by Gate 1R (for the design) and Gate 5 (for drift); Gate 7 escalates findings rather than re-deriving the architecture verdict.
-5. If applicable (per E3 triggers): invoke `woos-ecc-production-audit` for pre-merge readiness.
+5. If applicable (per E3 triggers): invoke `woos-production-audit` for pre-merge readiness.
 6. Output MUST follow structured findings format (per E2). "LGTM" without findings table = INVALID, rerun.
 7. Uses `woos-review-context` for cumulative findings.
 8. Uses `woos-agent-decision` when reviewer verdicts conflict.

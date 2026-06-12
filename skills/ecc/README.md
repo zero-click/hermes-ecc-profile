@@ -23,4 +23,4 @@ git add skills/ecc && git commit
 ## Notes
 
 - `production-audit` was removed from upstream. The local rewrite lives at
-  `skills/software-development/woos-ecc-production-audit/`.
+  `skills/software-development/woos-production-audit/`.

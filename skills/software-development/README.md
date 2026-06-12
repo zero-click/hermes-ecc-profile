@@ -219,7 +219,7 @@ Per story (in dependency order):
 - **Skill:** `woos-code-review-gate`
 - Dispatches `woos-code-reviewer` (+ `woos-security-reviewer` with `security-review` knowledge if sensitive)
 - Checks architecture conformance in Standard mode
-- If applicable: invokes `woos-ecc-production-audit` for pre-merge readiness
+- If applicable: invokes `woos-production-audit` for pre-merge readiness
 - Uses `woos-agent-decision` for reviewer conflicts
 - 2 rounds without convergence → `woos-human-handoff`
 
@@ -297,7 +297,7 @@ The workflow includes 3 non-negotiable enforcement rules (E1–E3) learned from 
 | `architecture-decision-records` | Gate 1 + cross-gate | Structured ADR capture for deviations |
 | `database-migrations` | Gate 3 (conditional) | Zero-downtime schema changes, rollback |
 | `deployment-patterns` | Gate 1, Gate 8 | CI/CD, Docker, rollback, production readiness |
-| `woos-ecc-production-audit` | Gate 7 (conditional) | Pre-merge production readiness audit |
+| `woos-production-audit` | Gate 7 (conditional) | Pre-merge production readiness audit |
 | `codebase-onboarding` | Gate 0 (first run) | Codebase analysis and onboarding guide |
 
 ## Key Design Principles
@@ -335,7 +335,7 @@ Skills that provide security domain knowledge for review gates:
 | Skill | Knowledge Provided |
 |-------|-------------------|
 | `security-review` | Authentication patterns, input validation, secrets handling, API security, payment flow security, OWASP checklist |
-| `woos-ecc-production-audit` | Pre-merge production readiness: error handling, logging, monitoring, graceful degradation |
+| `woos-production-audit` | Pre-merge production readiness: error handling, logging, monitoring, graceful degradation |
 
 #### Architecture & Design (Gate 1)
 
@@ -377,7 +377,7 @@ Skills that provide information-gathering capability:
 | **4: Acceptance** | `verification-loop` | — | — | — | — |
 | **5: Deviation Control** | — | — | `architecture-decision-records` | — | — |
 | **6: Traceability** | — | — | — | — | — |
-| **7: Code Review** | — | `security-review`, `woos-ecc-production-audit` | — | — | — |
+| **7: Code Review** | — | `security-review`, `woos-production-audit` | — | — | — |
 | **8: PR Readiness** | `git-workflow` | — | `deployment-patterns` | — | — |
 
 ## DCR (Design Change Request)

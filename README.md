@@ -140,7 +140,6 @@ git add skills/ecc && git commit
 
 - `woos-*` — locally maintained, edit freely
 - no prefix (under `skills/ecc/`) — upstream snapshot, do not hand-edit
-- `woos-ecc-*` — local rewrite of an upstream skill that has been dropped or diverged
 
 ## Near-Unattended Execution Foundation
 

@@ -16,8 +16,8 @@ ECC="$1"
 REPO_ROOT="$(cd "$(dirname "$0")/.." && pwd)"
 VENDOR="$REPO_ROOT/vendor/ecc"
 
-if [ ! -d "$ECC/skills" ] || [ ! -d "$ECC/rules" ] || [ ! -f "$ECC/mcp-configs/mcp-servers.json" ]; then
-  echo "Error: $ECC does not look like an ECC repo (missing skills/, rules/, or mcp-configs/mcp-servers.json)" >&2
+if [ ! -d "$ECC/skills" ]; then
+  echo "Error: $ECC does not look like an ECC repo (missing skills/)" >&2
   exit 1
 fi
 
@@ -39,10 +39,10 @@ SKILLS=(
   codebase-onboarding
 )
 
-echo "Refreshing vendored ECC snapshot from: $ECC"
+echo "Refreshing vendored ECC skills from: $ECC"
 
-rm -rf "$VENDOR/skills" "$VENDOR/rules" "$VENDOR/mcp-configs"
-mkdir -p "$VENDOR/skills" "$VENDOR/rules" "$VENDOR/mcp-configs"
+rm -rf "$VENDOR/skills"
+mkdir -p "$VENDOR/skills"
 
 for s in "${SKILLS[@]}"; do
   if [ ! -d "$ECC/skills/$s" ]; then
@@ -52,12 +52,6 @@ for s in "${SKILLS[@]}"; do
   cp -R "$ECC/skills/$s" "$VENDOR/skills/"
   echo "  ✓ skill: $s"
 done
-
-cp -R "$ECC/rules/." "$VENDOR/rules/"
-echo "  ✓ rules synced"
-
-cp "$ECC/mcp-configs/mcp-servers.json" "$VENDOR/mcp-configs/"
-echo "  ✓ mcp-configs synced"
 
 echo
 echo "Done. Review with: git -C $REPO_ROOT status vendor/ecc"

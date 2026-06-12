@@ -1,6 +1,6 @@
 # hermes-ecc-profile
 
-Skill-first coding profile for Hermes — a complete idea-to-delivery pipeline with role-specialized agents, hard gates, and traceable review at every stage.
+Skill collection for AI coding agents — a complete idea-to-delivery pipeline with role-specialized agents, hard gates, and traceable review at every stage. Host-agnostic (works wherever skills can be loaded; originally targeted at Hermes).
 
 ## Vision
 

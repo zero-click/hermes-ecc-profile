@@ -1,14 +1,16 @@
-# Vendored ECC artifacts
+# Vendored ECC skills
 
-This directory contains a frozen snapshot of upstream ECC artifacts that the
-profile depends on. Vendoring them removes the install-time requirement to
-point `install-profile.py` at a local ECC repo.
+Frozen snapshot of upstream ECC skills that the workflow depends on.
+Vendoring removes the install-time requirement to point
+`install-profile.py` at a local ECC repo.
 
 ## Contents
 
 - `skills/` — 15 ECC native skills referenced by Hermes workflows
-- `rules/` — ECC rule packs (per-language + common)
-- `mcp-configs/mcp-servers.json` — recommended MCP server definitions
+
+This collection is **skill-only**. Rules and MCP configs were removed
+to keep the repo positioned as a portable skill collection rather than
+a host-specific profile.
 
 ## Refreshing from upstream
 
@@ -23,6 +25,6 @@ ECC repo: <https://github.com/everything-claude-code/everything-claude-code>
 
 ## Notes
 
-- `production-audit` was removed from upstream and is therefore not vendored.
-  If the workflow ever references it, replace with a current ECC skill or
-  drop the reference.
+- `production-audit` was removed from upstream and is therefore not
+  vendored. If a workflow ever references it, replace with a current
+  ECC skill or drop the reference.

@@ -26,6 +26,7 @@ LOCAL_SOFTWARE_DEV_SKILLS = [
     "woos-story-decomposition",
     "woos-systematic-debugging",
     "woos-setup-rules",
+    "woos-ecc-production-audit",
 ]
 
 ECC_AGENT_ADAPTER_SKILLS = [

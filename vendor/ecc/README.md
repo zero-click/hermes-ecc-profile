@@ -25,6 +25,6 @@ ECC repo: <https://github.com/everything-claude-code/everything-claude-code>
 
 ## Notes
 
-- `production-audit` was removed from upstream and is therefore not
-  vendored. If a workflow ever references it, replace with a current
-  ECC skill or drop the reference.
+- `production-audit` was removed from upstream. A locally-maintained
+  rewrite lives at `skills/software-development/woos-ecc-production-audit/`
+  and is installed via the normal local-skill flow, not via vendoring.

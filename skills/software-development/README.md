@@ -300,9 +300,6 @@ The workflow includes 3 non-negotiable enforcement rules (E1–E3) learned from 
 | `deployment-patterns` | Gate 1, Gate 8 | CI/CD, Docker, rollback, production readiness |
 | `woos-ecc-production-audit` | Gate 7 (conditional) | Pre-merge production readiness audit |
 | `codebase-onboarding` | Gate 0 (first run) | Codebase analysis and onboarding guide |
-| `search-first` | Any gate | Quick research and reference lookup |
-| `deep-research` | Any gate | Deep research when needed |
-| `dmux-workflows` | Gate 3 (parallel) | Parallel coding lanes via worktrees |
 
 ## Key Design Principles
 
@@ -367,8 +364,6 @@ Skills that provide information-gathering capability:
 
 | Skill | Knowledge Provided |
 |-------|-------------------|
-| `search-first` | Quick targeted research, reference lookup |
-| `deep-research` | Multi-source deep investigation for complex problems |
 | `codebase-onboarding` | Codebase analysis: architecture map, entry points, conventions, patterns |
 
 ### Gate × Knowledge Matrix
@@ -376,10 +371,10 @@ Skills that provide information-gathering capability:
 | Gate | Core | Security | Architecture | Testing | Research |
 |------|------|----------|-------------|---------|----------|
 | **0: Product Intake** | — | — | — | — | `codebase-onboarding` |
-| **1: Feature Design** | — | — | `api-design`, `architecture-decision-records`, `deployment-patterns`, `database-migrations` | — | `deep-research` |
+| **1: Feature Design** | — | — | `api-design`, `architecture-decision-records`, `deployment-patterns`, `database-migrations` | — | — |
 | **1R: Design Review** | — | — | — | — | — |
 | **2: Story Decomposition** | — | — | — | — | — |
-| **3: Story Loop** | `tdd-workflow`, `coding-standards`, `verification-loop` | — | `database-migrations` | `e2e-testing`, `browser-qa` | `search-first` |
+| **3: Story Loop** | `tdd-workflow`, `coding-standards`, `verification-loop` | — | `database-migrations` | `e2e-testing`, `browser-qa` | — |
 | **4: Acceptance** | `verification-loop` | — | — | — | — |
 | **5: Deviation Control** | — | — | `architecture-decision-records` | — | — |
 | **6: Traceability** | — | — | — | — | — |

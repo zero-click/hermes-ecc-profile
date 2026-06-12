@@ -6,6 +6,12 @@ origin: ECC
 
 # Security Review Skill
 
+> **Role in the workflow.** This skill is the **knowledge base** of security
+> checklists and patterns. It is dispatched authoritatively by the
+> `security-reviewer` adapter at Gate 7 (fresh context), and it can also be
+> passively activated during implementation when an AI agent encounters
+> auth / input / secrets / payment / sensitive-data code.
+
 This skill ensures all code follows security best practices and identifies potential vulnerabilities.
 
 ## When to Activate

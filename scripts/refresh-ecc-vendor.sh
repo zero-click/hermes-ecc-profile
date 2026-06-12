@@ -23,9 +23,6 @@ fi
 
 SKILLS=(
   git-workflow
-  search-first
-  deep-research
-  dmux-workflows
   tdd-workflow
   coding-standards
   verification-loop

@@ -22,6 +22,7 @@ ecc_source_commit: 34d8bf806428c8b1a6d9929a54f76c5667420a42
 
 ## Workflow
 
+0. **Load checklist source**: MUST load the `security-review` skill body as the authoritative checklist for steps 1–3. The `security-review` skill is the knowledge base (auth patterns, input validation, secrets, API/payment security, OWASP); this adapter is the gate contract.
 1. Check trust boundaries and input validation paths.
 2. Review for injection, authz/authn gaps, secret exposure, unsafe external calls, and sensitive logging.
 3. Flag exploitable issues with severity and remediation guidance.

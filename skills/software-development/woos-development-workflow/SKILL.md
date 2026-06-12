@@ -50,7 +50,6 @@ Example: 01-user-auth, 02-project-dashboard
 ## Git Branch/Worktree Policy
 
 - `git-workflow` is required for branch strategy, commit/PR flow, and merge/rebase conventions.
-- `dmux-workflows` is required only when running parallel coding lanes.
 
 Mandatory bootstrap:
 
@@ -92,7 +91,6 @@ Only these skills are allowed in this workflow:
 | Git Workflow | `git-workflow` | imported |
 | Product Intake | _(reads PRD + roadmap + architecture)_ | from product pipeline |
 | Codebase Onboarding | `codebase-onboarding` | imported (first run) |
-| Parallel Orchestration | `dmux-workflows` | imported |
 | Feature Design | `woos-feature-design` | local |
 | ADR Capture | `architecture-decision-records` | imported |
 | API Design Review | `api-design` | imported (conditional) |

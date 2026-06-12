@@ -38,9 +38,6 @@ ECC_AGENT_ADAPTER_SKILLS = [
 
 ECC_SKILLS = [
     "git-workflow",
-    "search-first",
-    "deep-research",
-    "dmux-workflows",
     "tdd-workflow",
     "coding-standards",
     "verification-loop",

@@ -1,4 +1,4 @@
-# zero-prd-to-pr
+# zero-ratchet
 
 [English](./README.md) | [中文](./README.zh.md)
 

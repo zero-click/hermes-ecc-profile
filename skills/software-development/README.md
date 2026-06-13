@@ -21,15 +21,15 @@ Product inputs (PRD + roadmap + architecture)
    ▼  Gate 0      Product Intake — validate inputs, record in run-manifest
    ▼  Gate 1      Feature Plan (architecture + story table)   woos-feature-plan
    ▼  Gate 1R     Plan Review (fresh context, 2 reviewers)    woos-plan-review-gate
-   ▼  Gate 3      Story Loop (per story in DAG order)
+   ▼  Gate 2      Story Loop (per story in DAG order)
    │              ├─ 3.1 TDD             tdd-workflow
    │              ├─ 3.2 Implement       coding-standards
    │              └─ 3.3 Verify          verification-loop
-   ▼  Gate 4      Executable Acceptance            woos-executable-acceptance-gate
-   ▼  Gate 5      Deviation Control                woos-deviation-control-gate
-   ▼  Gate 6      Requirement Traceability         (built-in)
-   ▼  Gate 7      Code + Security Review           woos-code-review-gate
-   ▼  Gate 8      PR Readiness                     woos-pr-readiness
+   ▼  Gate 3      Executable Acceptance            woos-executable-acceptance-gate
+   ▼  Gate 4      Deviation Control                woos-deviation-control-gate
+   ▼  Gate 5      Requirement Traceability         (built-in)
+   ▼  Gate 6      Code + Security Review           woos-code-review-gate
+   ▼  Gate 7      PR Readiness                     woos-pr-readiness
    ▼  Post        Workflow Memory                  woos-workflow-memory
    ▼
 PR created ✅
@@ -115,5 +115,5 @@ When engineering hits a design issue it cannot resolve inside scope:
     ├── engineering/<version>/<feature-id>-plan.md  ← Gate 1 (incl. Story Table)
     ├── adr/                                  ← ADR captures
     ├── feedback/<version>/<feature-id>-dcr-<NNN>.md  ← DCR
-    └── traceability/<version>/<feature-id>-traceability.md  ← Gate 6
+    └── traceability/<version>/<feature-id>-traceability.md  ← Gate 5
 ```

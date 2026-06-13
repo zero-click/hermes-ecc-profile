@@ -42,4 +42,4 @@ Gate passes only when `artifact_sync_status` is `PASS`.
 
 ## Post-Pass Action (PR creation)
 
-When the gate returns `PASS`, the orchestrator MUST dispatch `git-workflow` to run `gh pr create` using the test plan and traceability summary produced here. PR creation is NOT performed by this skill; this skill only certifies readiness. The orchestrator records the resulting PR URL in `run-manifest.yaml` under `gate-8-pr.pr_url`.
+When the gate returns `PASS`, the orchestrator MUST dispatch `git-workflow` to run `gh pr create` using the test plan and traceability summary produced here. PR creation is NOT performed by this skill; this skill only certifies readiness. The orchestrator records the resulting PR URL in `run-manifest.yaml` under `gate-7-pr.pr_url`.

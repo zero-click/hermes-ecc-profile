@@ -10,7 +10,7 @@ license: MIT
 
 ## Purpose
 
-Produce the **engineering plan** for one feature: the technical decisions ADR-worthy enough to lock before code is written, plus the story execution table the Gate 3 loop will consume.
+Produce the **engineering plan** for one feature: the technical decisions ADR-worthy enough to lock before code is written, plus the story execution table the Gate 2 loop will consume.
 
 This is the engineering analog of Superpowers' plan mode: take a PRD (which is product-side WHAT/WHY plus a stable interface contract) and produce one document that tells the implementer how to build it and in what order.
 
@@ -126,7 +126,7 @@ A correctly sized story is one that:
 3. Has a **bounded, declarable diff scope** so failure isolation and revert know what to touch.
 4. Has no overlap on the same files as another story it does not depend on.
 
-Sizing is NOT based on estimated hours, owner, sprint, or "number of tasks". There is no fixed "N stories per feature" rule — decompose as finely as the Gate 3 loop requires to converge.
+Sizing is NOT based on estimated hours, owner, sprint, or "number of tasks". There is no fixed "N stories per feature" rule — decompose as finely as the Gate 2 loop requires to converge.
 
 ## Hard Gate Rules
 
@@ -170,7 +170,7 @@ gate-1-plan:
   planner_review_path: docs/reviews/<version>/<feature-id>-plan-review.md
 ```
 
-Per-story runtime state (`status`, `attempts`, `failure_log`) lives in `run-manifest.yaml` under `gate_results.gate-3-execution.<story-id>`, not in `plan.md`. `plan.md` is immutable once Gate 1 passes; runtime updates do NOT edit it.
+Per-story runtime state (`status`, `attempts`, `failure_log`) lives in `run-manifest.yaml` under `gate_results.gate-2-execution.<story-id>`, not in `plan.md`. `plan.md` is immutable once Gate 1 passes; runtime updates do NOT edit it.
 
 ## Lite Mode Adjustments
 

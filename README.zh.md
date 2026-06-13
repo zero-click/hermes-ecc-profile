@@ -90,12 +90,12 @@ ln -s "$PWD/skills/ecc"                  ~/.claude/skills/ecc
 Run Orchestrator → Git → Product Intake
   → Gate 1  Feature Plan（架构 + 故事表）          (woos-feature-plan)
   → Gate 1R Plan Review（双评审，fresh context）   (woos-plan-review-gate)
-  → Gate 3  Story Loop（每个 story：TDD + Implement + Verify）
-  → Gate 4  Executable Acceptance
-  → Gate 5  Deviation Control
-  → Gate 6  Traceability
-  → Gate 7  Code / Security Review
-  → Gate 8  PR Readiness
+  → Gate 2  Story Loop（每个 story：TDD + Implement + Verify）
+  → Gate 3  Executable Acceptance
+  → Gate 4  Deviation Control
+  → Gate 5  Traceability
+  → Gate 6  Code / Security Review
+  → Gate 7  PR Readiness
   → Workflow Memory
 ```
 
@@ -124,7 +124,7 @@ Lite 模式跳过 Gate 1、1R、4、5、6——适用于低风险小改动。
 - **Skill 间引用没 CI 校验。** SKILL.md 之间靠字符串相互引用（`woos-architect`、`woos-product-planner`……）。重命名/删除只有当 orchestrator 真去 dispatch 失败时才暴露。
 - **"完成"的定义停在 PR 合并。** 没有 post-merge 钩子，没有部署/观测/"roadmap 的成功指标真的动了吗"的回环。
 - **单人在用，没经过实战。** ECC/BMAD/Superpowers 有社区帮你踩坑，这条流水线只跑过一个人手上的少数 feature，很多失败模式还潜伏。
-- **DCR 摩擦可能反向激励隐藏偏离。** Gate 5 把未授权偏离当 blocker，AI 的最优策略可能是少报而不是诚实报。目前没有反向激励机制。
+- **DCR 摩擦可能反向激励隐藏偏离。** Gate 4 把未授权偏离当 blocker，AI 的最优策略可能是少报而不是诚实报。目前没有反向激励机制。
 - **DAG rollback 模糊。** 如果下游 story 已经基于上游 story commit，而上游需要 revert，级联回滚步骤是丢给 AI 想，没有写进工作流。
 
 ## 更新 `skills/ecc/`

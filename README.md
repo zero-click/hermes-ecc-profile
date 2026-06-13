@@ -90,12 +90,12 @@ Entry: `woos-development-workflow`. Standard mode flow:
 Run Orchestrator → Git → Product Intake
   → Gate 1  Feature Plan (architecture + story table)  (woos-feature-plan)
   → Gate 1R Plan Review (2 reviewers, fresh context)   (woos-plan-review-gate)
-  → Gate 3  Story Loop              (TDD + Implement + Verify per story)
-  → Gate 4  Executable Acceptance
-  → Gate 5  Deviation Control
-  → Gate 6  Traceability
-  → Gate 7  Code / Security Review
-  → Gate 8  PR Readiness
+  → Gate 2  Story Loop              (TDD + Implement + Verify per story)
+  → Gate 3  Executable Acceptance
+  → Gate 4  Deviation Control
+  → Gate 5  Traceability
+  → Gate 6  Code / Security Review
+  → Gate 7  PR Readiness
   → Workflow Memory
 ```
 
@@ -124,7 +124,7 @@ Honest list — these are real and not getting solved this week:
 - **No CI for skill cross-references.** SKILL.md files reference each other by string (`woos-architect`, `woos-product-planner`, …). A rename / delete is detected only when the orchestrator tries to dispatch and fails.
 - **Definition of done stops at PR merge.** No post-merge hook for deployment, observability, or "did the roadmap success metric actually move".
 - **Single-user, not battle-tested.** ECC, BMAD, Superpowers have communities surfacing edge cases. This pipeline has been run end-to-end by one person on a small number of features. Many failure modes are still latent.
-- **DCR friction may suppress reporting.** Gate 5 makes unauthorized deviation expensive, which can incentivize hiding deviations rather than reporting them. No counter-incentive currently.
+- **DCR friction may suppress reporting.** Gate 4 makes unauthorized deviation expensive, which can incentivize hiding deviations rather than reporting them. No counter-incentive currently.
 - **DAG rollback ambiguity.** If a downstream story committed against an upstream story that later needs revert, the cascade-revert procedure is left to the AI rather than spelled out in the workflow.
 
 ## Updating `skills/ecc/`

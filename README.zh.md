@@ -96,7 +96,7 @@ Run Orchestrator → Git → Product Intake
   → Workflow Memory
 ```
 
-Lite 模式跳过 Gate 1、1R、4、5、6——适用于低风险小改动。
+Lite 模式跳过 Gate 1、1R；Gate 3 跳过 AC 覆盖 / 范围漂移检查；Gate 4 跳过追溯矩阵生成。适用于低风险小改动。
 
 **Gate 1 的产物**是单个 per-feature `docs/engineering/<version>/<feature-id>-plan.md`：包含架构决策、测试策略、rollout/rollback、baseline/deviation 记录，以及 story 执行表（`ID | AC | Depends | Diff Scope`）。Interface 契约住在 PRD 的 `<feature-id>-interface.md` 里，这里不重复。PRD AC 是规约，diff scope 里的测试就是验证，`git restore -- <diff_scope>` 就是回滚。
 

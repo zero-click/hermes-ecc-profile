@@ -96,7 +96,7 @@ Run Orchestrator → Git → Product Intake
   → Workflow Memory
 ```
 
-Lite mode skips Gates 1, 1R, 4, 5, 6 — for low-risk small changes.
+Lite mode skips Gate 1 and 1R; Gate 3 skips its AC-coverage and scope-drift checks; Gate 4 skips traceability-matrix generation. Use for low-risk small changes.
 
 **Gate 1 output** is a single per-feature `docs/engineering/<version>/<feature-id>-plan.md` containing architecture decisions, test strategy, rollout/rollback, baseline/deviation record, and the story execution table (`ID | AC | Depends | Diff Scope`). Interface contracts live in the PRD's `<feature-id>-interface.md` and are not duplicated. PRD AC is the spec, tests in the diff scope are the verification, and `git restore -- <diff_scope>` is the rollback.
 

@@ -44,27 +44,29 @@ Gate passes only when `artifact_sync_status` is `PASS`.
 
 ## Traceability Matrix Generation (Standard mode)
 
-This skill OWNS the traceability artifact. The matrix is generated mechanically — no LLM judgment required:
+This skill OWNS the traceability artifact. Generation is a pure join over the plan's Story Table and the last `verification-loop` results — no LLM judgment required.
 
-1. Read the plan's Story Table at `docs/engineering/<version>/<feature-id>-plan.md`.
-2. For every PRD AC in the table's `AC` column:
-   - Locate the story row(s) that cover it
-   - Locate the test files inside those rows' `Diff Scope`
-   - Capture the test runner's PASS/FAIL outcome from the last `verification-loop` run
-3. Emit `docs/traceability/<version>/<feature-id>-traceability.md`:
+**Inputs:**
+- Plan's Story Table at `docs/engineering/<version>/<feature-id>-plan.md` (columns `ID | AC | Depends | Diff Scope`)
+- The last `verification-loop` run's per-file test outcome (PASS/FAIL counts per test file)
+
+**Procedure:** for each row of the Story Table, attribute every test file inside that row's `Diff Scope` to every AC ID in that row's `AC` column. Within each file, count PASS/FAIL from the verification-loop output. No test-name → AC mapping is required, because the plan's `Diff Scope` already declares which test files belong to which AC(s).
+
+**Output:** `docs/traceability/<version>/<feature-id>-traceability.md`
 
 ```markdown
 # <feature-id> Traceability
 
-| PRD AC | Story | Plan Section | Test File | Test Name | Last Run |
-|--------|-------|--------------|-----------|-----------|----------|
-| FR-1.a | s01   | Architecture | store/persist_test.go | TestPersist | ✅ PASS |
-| FR-1.b | s02   | Architecture | store/persist_test.go | TestPersist_Update | ✅ PASS |
+| PRD AC | Story | Test File(s) (from Diff Scope) | Last Run |
+|--------|-------|--------------------------------|----------|
+| FR-1.a | s01   | store/persist_test.go          | ✅ 4/4 PASS |
+| FR-1.b | s02   | store/persist_test.go          | ✅ 4/4 PASS |
+| FR-3.a | s03   | store/lifecycle_test.go        | ✅ 2/2 PASS |
 ```
 
-4. Embed the same table in the PR body (via `traceability_matrix_inline`).
+Embed the same table in the PR body (via `traceability_matrix_inline`).
 
-If any AC has no test or any test failed, return `REQUEST_CHANGES`. (This is a safety net — the `woos-code-review-gate` AC-coverage check should have caught it first.)
+If any AC has no test file in its story's `Diff Scope`, or any test file shows a FAIL, return `REQUEST_CHANGES`. (This is a safety net — Gate 3's AC-coverage check should have caught it first.)
 
 ## Post-Pass Action (PR creation)
 
